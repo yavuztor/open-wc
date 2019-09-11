@@ -32,15 +32,15 @@ async function fetchText(url, userAgent) {
 
 async function expectCompatibilityTransform(userAgent, features = {}) {
   const stage4Features = await fetchText(
-    `stage-4-features.js${features.esModules ? '?transform-modules' : ''}`,
+    `stage-4-features.js${features.esModules ? '?transform-systemjs' : ''}`,
     userAgent,
   );
   const esModules = await fetchText(
-    `module-features.js${features.esModules ? '?transform-modules' : ''}`,
+    `module-features.js${features.esModules ? '?transform-systemjs' : ''}`,
     userAgent,
   );
   const stage4NoModernBrowserImpl = await fetchText(
-    `stage-4-no-modern-browser-impl.js${features.esModules ? '?transform-modules' : ''}`,
+    `stage-4-no-modern-browser-impl.js${features.esModules ? '?transform-systemjs' : ''}`,
     userAgent,
   );
 
@@ -477,7 +477,7 @@ describe('compatibility transform middleware', () => {
     });
   });
 
-  it('compiles inline modules', async () => {
+  it('compiles inline scripts', async () => {
     let server;
     try {
       ({ server } = await startServer(
@@ -491,7 +491,7 @@ describe('compatibility transform middleware', () => {
       const indexResponse = await fetch(`${host}index.html`);
       expect(indexResponse.status).to.equal(200);
       const inlineModuleResponse = await fetch(
-        `${host}${virtualFilePrefix}inline-module-0.js?source=/index.html`,
+        `${host}${virtualFilePrefix}inline-script-0.js?source=/index.html`,
       );
       expect(inlineModuleResponse.status).to.equal(200);
       const inlineModuleText = await inlineModuleResponse.text();
@@ -537,7 +537,7 @@ describe('compatibility transform middleware', () => {
       );
 
       try {
-        const response = await fetch(`${host}app.js?transform-modules`);
+        const response = await fetch(`${host}app.js?transform-systemjs`);
         const responseText = await response.text();
         expect(response.status).to.equal(200);
         expect(responseText).to.include(
@@ -601,7 +601,7 @@ describe('compatibility transform middleware', () => {
     });
 
     it('transforms properly', async () => {
-      const response = await fetch(`${host}app.ts?transform-modules`);
+      const response = await fetch(`${host}app.ts?transform-systemjs`);
       const responseText = await response.text();
 
       expect(response.status).to.equal(200);

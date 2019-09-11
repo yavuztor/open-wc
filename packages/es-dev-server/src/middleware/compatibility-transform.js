@@ -6,6 +6,7 @@ import {
   isPolyfill,
   RequestCancelledError,
   shoudlTransformToModule,
+  logDebug,
 } from '../utils/utils.js';
 import { sendMessageToActiveBrowsers } from '../utils/message-channel.js';
 import { ResolveSyntaxError } from '../utils/resolve-module-imports.js';
@@ -99,6 +100,8 @@ export function createCompatibilityTransformMiddleware(cfg) {
         );
         return undefined;
       }
+
+      logDebug(error);
 
       let errorMessage = error.message;
 

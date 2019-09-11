@@ -1,3 +1,5 @@
+/** @typedef {import('polyfills-loader').InjectPolyfillsConfig} InjectPolyfillsConfig */
+
 import path from 'path';
 import { toBrowserPath, setDebug } from './utils/utils.js';
 import { compatibilityModes, polyfillsModes } from './constants.js';
@@ -135,6 +137,7 @@ export function createConfig(config) {
     polyfills = polyfillsModes.AUTO,
     responseTransformers,
     debug = false,
+    hashPolyfills = true,
   } = config;
 
   if (debug) {

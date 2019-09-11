@@ -5,7 +5,7 @@ import { createBasePathMiddleware } from './middleware/base-path.js';
 import { createHistoryAPIFallbackMiddleware } from './middleware/history-api-fallback.js';
 import { createCompatibilityTransformMiddleware } from './middleware/compatibility-transform.js';
 import { createWatchServedFilesMiddleware } from './middleware/watch-served-files.js';
-import { createTransformIndexHTMLMiddleware } from './middleware/transform-index-html.js';
+import { createInjectPolyfillsLoaderMiddleware } from './middleware/inject-polyfills-loader.js';
 import { createMessageChannelMiddleware } from './middleware/message-channel.js';
 import { createEtagCacheMiddleware } from './middleware/etag-cache.js';
 import { createResponseBodyCacheMiddleware } from './middleware/response-body-cache.js';
@@ -53,6 +53,7 @@ export function createMiddlewares(config, fileWatcher) {
     watch,
     logErrorsToBrowser,
     watchDebounce,
+    hashPolyfills,
   } = config;
 
   /** @type {import('koa').Middleware[]} */
@@ -79,7 +80,7 @@ export function createMiddlewares(config, fileWatcher) {
   const setupBabel =
     customBabelConfig || compatibilityMode !== compatibilityModes.NONE || readUserBabelConfig;
   const setupCompatibility = compatibilityMode && compatibilityMode !== compatibilityModes.NONE;
-  const setupTransformIndexHTML = nodeResolve || setupBabel || setupCompatibility;
+  const setupInjectPolyfillsLoader = setupBabel || setupCompatibility;
   const setupHistoryFallback = appIndex;
   const setupMessageChanel = watch || (logErrorsToBrowser && (setupBabel || nodeResolve));
 
@@ -147,13 +148,14 @@ export function createMiddlewares(config, fileWatcher) {
   }
 
   // injects polyfills and shims for compatibility with older browsers
-  if (setupTransformIndexHTML) {
+  if (setupInjectPolyfillsLoader) {
     middlewares.push(
-      createTransformIndexHTMLMiddleware({
+      createInjectPolyfillsLoaderMiddleware({
         compatibilityMode,
         polyfillsMode,
         appIndex,
         appIndexDir,
+        hashPolyfills,
       }),
     );
   }
