@@ -14,7 +14,9 @@
   "author": "open-wc",
   "homepage": "https://github.com/open-wc/open-wc/",
   "scripts": {
-    "prepublishOnly": "../../scripts/insert-header.js"
+    "prepublishOnly": "../../scripts/insert-header.js",
+    "start:no-scope": "es-dev-server -c demo/no-scope/server.js",
+    "start:with-scope": "es-dev-server -c demo/with-scope/server.js"
   },
   "files": [
     "*.d.ts",
@@ -32,7 +34,9 @@
     "lit-html": "^1.0.0"
   },
   "devDependencies": {
-    "@open-wc/testing": "^2.5.0"
+    "@open-wc/testing": "^2.5.0",
+    "es-dev-server": "^1.36.2",
+    "lit-html": "^1.0.0"
   },
   "module": "index.js"
 }
